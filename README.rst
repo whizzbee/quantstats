@@ -64,6 +64,12 @@ Quick Start
     # or using extend_pandas() :)
     stock.sharpe()
 
+	# install local fork version:
+	# go to directoy where setup.py file is
+	pip install -e .
+
+
+
 Output:
 
 .. code:: text

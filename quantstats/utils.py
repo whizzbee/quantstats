@@ -371,12 +371,16 @@ def make_index(
     if rebalance is None:
         for ticker, weight in ticker_weights.items():
             index[ticker] = weight * index[ticker]
+        print(index.dtypes)  # This will show the data type of each column in 'index'
         return index.sum(axis=1)
 
     last_day = index.index[-1]
 
     # rebalance marker
-    rbdf = index.resample(rebalance).first()
+    # Updated rebalance parameter in the resample() function from 'M' to 'ME'
+    #rbdf = index.resample(rebalance).first()
+    rbdf = index.resample(rebalance.replace('M', 'ME')).first()
+
     rbdf["break"] = rbdf.index.strftime("%s")
 
     # index returns with rebalance markers
@@ -397,7 +401,7 @@ def make_index(
 
     # drop when all are NaN
     index.dropna(how="all", inplace=True)
-    return index[index.index <= last_day].sum(axis=1)
+    return index[index.index <= last_day].drop('break', axis=1).sum(axis=1) #drops 'break' column before summming up data
 
 
 def make_portfolio(returns, start_balance=1e5, mode="comp", round_to=None):
